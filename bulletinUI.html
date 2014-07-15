@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="utf-8" />
+        <title>Bulletin Settings</title>
+	<style>
+	    /* Dialogs */
+	    .dialog {
+		display: none;
+	    }
+	    /* Headers */
+	    .header {
+		padding: 10px 0;
+		font-size: 20px;
+	    }
+	    /* Form */
+	    #wrapper #settings {
+		padding: 14px 0 0;
+		border-top: 1px solid #e5e5e5;
+	    }
+	    /* Bulletin name and link */
+	    #wrapper #settings #bulletin {		
+		padding-bottom: 10px;
+	    }
+	    /* Bulletin name */
+	    #wrapper #settings #bulletin #name {
+		font-size: 16px;
+	    }
+	    #wrapper #settings #bulletin #name.spacer {
+		margin-right: 10px;
+	    }
+	    #wrapper #settings #bulletin #edit,
+	    #wrapper #settings #bulletin #error {
+		display: none;
+	    }
+	    #wrapper #settings #bulletin #error {
+		color: red;
+	    }
+	    #wrapper #settings .tooltip span {
+		width: 200px;
+	    }
+	    
+	    /* Authorization Buttons */
+	    #authorization .actions {
+		position: relative;
+		text-align: center;
+	    }
+	</style>
+	
+	<link rel="stylesheet" href="../Common-Production/Settings/css/Settings.css" />
+	<link rel="stylesheet" href="../Common-Production/Settings/css/Widget.css" />
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>	
+	<script src="https://www.google.com/jsapi"></script>
+	<script src="https://rvashow2.appspot.com/gadgets/gadgets.min.js"></script>
+	
+	<script src="../Common-Production/Common/RiseVision.Common.min.js"></script>
+	<script src="../Common-Production/Bulletin/RiseVision.Bulletin.js"></script>
+	<script src="js/bulletin.js"></script>		
+    </head>
+    <body>
+	<div class="overlay"></div>
+	<div id="authorization" class="dialog">
+	    The Bulletin Widget requires your authorization in order to be able access your Google Drive for storing Bulletins.<br><br>
+	    <div class="actions">
+		<button id="authorize" class="action" type="button">
+		    <span>Authorize</span>
+		</button>
+	    </div>
+
+	</div>
+	<div id="wrapper" class="dialog">
+	    <div class="header">
+		<span>Bulletin Settings</span>		
+	    </div>
+	    <form id="settings" name="settings">
+		<div id="bulletin">
+		    <span id="name"></span>
+		    <a id="select" href="#" data-for="name"><span>Select</span></a>
+		    <a id="new" href="#"><span> | New</span></a>
+		    <a id="edit" href="#" target="_blank"><span> | Edit</span></a>
+		    <a id="help" href="http://www.risevision.com/help/users/what-are-gadgets/free-gadgets/bulletin-widget/" target="_blank"><span> | Help</span></a><br />
+		    <span id="error"></span>
+		</div>		
+		<ol>
+		    <li>
+			<label for="refreshInterval">
+			    <a href="#" class="tooltip">Data Refresh Interval (minutes):<span>How often to refresh the Bulletin</span></a>
+			</label>
+			<select id="refreshInterval" name="refreshInterval">
+			    <option value="-1">Do not refresh</option>
+			    <option value="1">1</option>
+			    <option value="5" selected="selected">5</option>
+			    <option value="30">30</option>
+			    <option value="60">60</option>
+			</select>
+		    </li>
+		</ol>
+		<div class="actions">
+		    <button id="save" class="action" type="button">
+			<span>Save</span>
+		    </button>
+		</div>
+	    </form>
+	</div>
+	<div id="newBulletin" class="dialog">
+	    <div class="header">Bulletin Name</div>
+	    <ol>
+		<li>
+		    <label for="bulletinName">Enter a Bulletin name:</label>
+		    <input type="text" id="bulletinName" name="bulletinName" />
+		</li>
+	    </ol>
+	    <div class="actions">
+		<button id="saveName" class="action" type="button">
+		    <span>Save</span>
+		</button>
+		<button id="cancelName" class="action" type="button">
+		    <span>Cancel</span>
+		</button>
+	    </div>
+	</div>
+	
+	<script>
+	    var auth = new RiseVision.Common.Authorization(),
+		apiKey = "AIzaSyBTrD33SOr04yZehbpiQ6BC67mi7Iewuwo",
+                settings = null;
+		
+	    google.load("picker", "1");
+	    
+	    function handleClientLoad() {                                
+                $(window).bind({
+                    authorized: function() {
+                        settings = new RiseVision.Bulletin.Settings();		    						
+			settings.init();
+                    },
+                    notAuthorized: function() {
+			$("#authorize").click(function() {
+			    auth.handleLogin();
+                        });
+			
+			$("#authorization").show();
+                    }
+                });
+                
+                window.setTimeout(function() { 
+                    gapi.client.setApiKey(apiKey);
+                    
+                    window.setTimeout(function() {
+			auth.checkAuth();
+                    }, 1);
+                });
+            }
+	</script>
+	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+    </body>
+</html>

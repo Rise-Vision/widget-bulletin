@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta charset="utf-8" />
+        <title>Bulletin</title>
+	<style>
+	    body {
+		width: 100%;
+		height: 100%;
+	    }
+	</style>
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://rvashow2.appspot.com/gadgets/gadgets.min.js"></script>	
+    </head>
+    <body>
+	<iframe id="bulletin" frameborder="0" scrolling="no"></iframe>
+	
+	<script type="text/javascript">
+	    var isLoading = true,
+		prefs = new gadgets.Prefs(),
+		refreshInterval = prefs.getInt("refreshInterval") == -1 ? prefs.getInt("refreshInterval") : prefs.getInt("refreshInterval") * 60000,
+		url = "https://script.google.com/macros/s/AKfycbyl8HlttavRNgqfQZg2QEdve-Yxgv_mKTSMNPhH_R6Lanif7Dw/exec?folderId=" + prefs.getString("folderID") +
+		    "&fileId=" + prefs.getString("fileID") + "&prefix=setURL";
+		
+	    window.oncontextmenu = function() {
+		return false;
+	    };
+	    
+	    //Add Analytics code.
+	    var _gaq = _gaq || [];
+	    
+	    _gaq.push(['_setAccount', 'UA-41395348-23']);
+	    _gaq.push(['_trackPageview']);
+	  
+	    (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	    })();
+	    
+	    $(document).ready(function() {
+		getURL();
+	    });
+	    
+	    function getURL() {
+		$.getScript(url);
+	    }
+	    
+	    function setURL(src) {
+		$("#bulletin").attr("src", src).attr("width", prefs.getInt("rsW")).attr("height", prefs.getInt("rsH"));
+		
+		if (refreshInterval != -1) {
+		    setTimeout(function() {			
+			getURL();
+		    }, refreshInterval);
+		}
+		
+		if (isLoading) {
+		    isLoading = false;
+		    readyEvent();
+		}
+	    }
+	    
+	    function readyEvent() {
+		gadgets.rpc.call("", "rsevent_ready", null, prefs.getString("id"), false, false, false, true, false);
+	    }
+	</script>
+    </body>
+</html>
