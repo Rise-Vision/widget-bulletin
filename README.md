@@ -1,12 +1,21 @@
 # Bulletin Widget
 
 ## Introduction
+The Bulletin Widget enables you to select a Bulletin that you have created using the Bulletin App, and display it in a Presentation.
 
-The Bulletin Widget displays a bulletin from Google Drive that was created using the Rise Vision Bulletin Editor.
+### How It Works
+If the *Bulletin Settings* window is opened, and a Bulletin has already been selected, the Widget extracts details about that Bulletin from Google Drive, and shows its name and resolution. A message is displayed if the resolution of the Bulletin does not match the resolution of the Placeholder. The Widget uses [Google Picker](https://developers.google.com/picker/) to enable a user to select a Bulletin directly from their Google Drive. If *New* is selected then, after prompting for a name, the Widget opens the Bulletin App in a new tab and creates the Bulletin in the *Bulletins* folder of the user’s Google Drive. Selecting *Edit* opens the existing Bulletin in the Bulletin App in a new tab.
+
+When run, the Widget shows the Bulletin inside of an `iframe`. Because the file name is part of the Bulletin’s URL, if the user were to change the name of the Bulletin via the Google Drive UI, the URL would no longer be valid. To get around this problem, a Google Apps script is used that takes the folder ID and file ID as parameters, and returns the dynamically constructed URL. The Bulletin calls this script as per the *Data Refresh Interval* setting.
 
 Bulletin Widget works in conjunction with [Rise Vision](http://www.risevision.com), the [digital signage management application](http://rva.risevision.com/) that runs on [Google Cloud](https://cloud.google.com).
 
 At this time Chrome is the only browser that this project and Rise Vision supports.
+
+## Development
+
+### Local Development Environment Setup and Installation
+The Widget can be installed by executing the following command: `git clone https://github.com/Rise-Vision/widget-bulletin.git`
 
 ## Submitting Issues
 If you encounter problems or find defects we really want to hear about them. If you could take the time to add them as issues to this Repository it would be most appreciated. When reporting issues please use the following format where applicable:
@@ -29,7 +38,6 @@ What actually happened. (screenshots / video captures always help)
 All contributions are greatly appreciated and welcome! If you would first like to sound out your contribution ideas please post your thoughts to our [community](http://community.risevision.com), otherwise submit a pull request and we will do our best to incorporate it.
 
 ### Languages
-
 If you would like to translate the user interface for this product to another language please complete the following:
 - Download the English translation file from this repository.
 - Download and install POEdit. This is software that you can use to write translations into another language.
